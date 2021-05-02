@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+.card {
+  border: 1px solid #999;
+  border-radius: 10px;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  /* line-height: 34px; */
+  /* height: 34px; */
+  text-align: center;
+  width: 100px;
+  height: 150px;
+}
