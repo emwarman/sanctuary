@@ -39,15 +39,28 @@ export default class Game extends Component {
     
   }
 
-  componentDidMount() {
-    // TODO: Actually sync with other clients.
-    setTimeout(() => {
-      let newGame = GameState.createNewGame(["thomas", "emily"]); // This should be run on host and distributed to all clients.
-      this.setState({
-        game_model: newGame,
-        game_state: "WAITING_FOR_TURN",
-      }, () => {this.onTurnStart()});
-    }, 1000);
+  onGameModelChanged(new_game_model) {
+
+    console.log("New game state recieved.");
+    console.log(new_game_model);
+    let new_game_state = this.state.game_state;
+    if (this.state.game_state == "WAITING_FOR_TURN" || this.state.game_state == "JOINING_GAME" || this.state.game_state == "DISCARD") {
+        if (new_game_model.turn == this.props.username) {
+            new_game_state = "DRAW";
+        } else {
+            new_game_state ="WAITING_FOR_TURN";
+        }
+    }
+    this.setState({
+        game_model: new_game_model,
+        game_state: new_game_state,
+    });
+  }
+
+  async componentDidMount() {
+    this.network_state_callback = this.props.database.ref("game/" + this.props.game_uuid).on('value', snapshot => {
+        this.onGameModelChanged(new GameState(snapshot.val()));
+    });
   }
 
   onTurnStart() {
@@ -56,6 +69,11 @@ export default class Game extends Component {
         game_state: "DRAW",
       });
     }
+  }
+
+  async onTurnEnd() {
+      this.state.game_model.endTurn();
+      await this.props.database.ref("game/" + this.props.game_uuid).set(this.state.game_model.serialize());
   }
 
   selectedCard(index) {
@@ -84,6 +102,7 @@ export default class Game extends Component {
       selected_card: -1,
       game_state: "WAITING_FOR_TURN",
     });
+    this.onTurnEnd();
   }
 
   render() {

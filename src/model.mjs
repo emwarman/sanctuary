@@ -37,8 +37,8 @@ export class Player {
     if (json) {
       this.username = json["name"];
       this.hand = json["hand"].map(c => new Card(c));
-      this.arboretum = new Arboretum(json["arboretum"]);
-      this.discard = json["discard"].map(c => new Card(c));
+      this.arboretum = new Arboretum(json["arboretum"] || []);
+      this.discard = (json["discard"] || []).map(c => new Card(c));
     } else {
       this.username = "";
       this.hand = [];
@@ -50,9 +50,9 @@ export class Player {
   serialize() {
     return {
       "name": this.username,
-      "hand": this.hand.map(c => c.serialize),
+      "hand": this.hand.map(c => c.serialize()),
       "arboretum": this.arboretum.serialize(),
-      "discard": this.discard.map(c => c.serialize),
+      "discard": this.discard.map(c => c.serialize()),
     }
   }
 }
@@ -188,8 +188,24 @@ export class GameState {
      player.discard.push(card);
   }
 
+  endTurn() {
+    let curr_index = 0;
+    for (let idx =0; idx < this.players.length; idx++) {
+      if (this.players[idx].username == this.turn) {
+        curr_index = idx;
+      }
+    }
+    console.log(curr_index);
+    let new_idx = (curr_index + 1) % this.players.length;
+    console.log(new_idx);
+    let next_player = this.players[new_idx].username
+    this.turn = next_player;
+    console.log("new player " + this.turn);
+    this.validateEndOfTurn();
+  }
+
   validateEndOfTurn() {    
-    for (let player in this.players) {
+    for (let player of this.players) {
       assertValidGameState(player.hand.length == 7);
       player.arboretum.validate();
     }

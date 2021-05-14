@@ -72,7 +72,7 @@ export default class App extends Component {
       return <Lobby username={this.state.username} database={this.state.database} onGameStarted={this.onGameStarted.bind(this)}></Lobby>
     }
     if (this.state.app_state == "GAME") {
-      return <Game username={this.state.username}></Game>
+      return <Game username={this.state.username} game_uuid={this.state.game_uuid} database={this.state.database}></Game>
     }
     return <div>Oops something went wrong. .</div>
   }

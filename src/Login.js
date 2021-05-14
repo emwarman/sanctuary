@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+const MIN_USERNAME = 5;
 export default class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -21,10 +22,10 @@ export default class Login extends React.Component {
     render() {
         let is_valid = false;
         let message = ""
-        if (this.state.value.length > 0 && this.state.value.length < 6) {
-            message = "Your username must be 6 or more characters."
+        if (this.state.value.length > 0 && this.state.value.length < MIN_USERNAME) {
+            message = `Your username must be ${MIN_USERNAME} or more characters.`
         }
-        if (this.state.value.length >= 6) {
+        if (this.state.value.length >= MIN_USERNAME) {
             is_valid = true;
         }
         return (
