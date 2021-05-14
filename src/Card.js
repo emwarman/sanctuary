@@ -22,8 +22,9 @@ class Card extends Component {
 
     render() {
         var speciesColor = speciesColors[this.props.species];
+        let classes = "card" + (this.props.selected ? " selected" : "");
         return(
-            <div className="card">
+            <div className={classes} onClick={this.props.onClick}>
                 <span style={{color: speciesColor}}> {this.props.value} <GiFruitTree/ ></span>
             </div>
         )

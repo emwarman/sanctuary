@@ -39,6 +39,11 @@ export class Player {
       this.hand = json["hand"].map(c => new Card(c));
       this.arboretum = new Arboretum(json["arboretum"]);
       this.discard = json["discard"].map(c => new Card(c));
+    } else {
+      this.username = "";
+      this.hand = [];
+      this.arboretum = new Arboretum([]);
+      this.discard = [];
     }
   }
 
@@ -114,8 +119,6 @@ export class GameState {
     for (let name of player_names) {
       let player = new Player();
       player.username = name;
-      player.hand = [];
-      player.discard = [];
       gs.players.push(player);
     }    
 
@@ -169,6 +172,20 @@ export class GameState {
     let player = this.getPlayer(this.turn);
     player.arboretum.positions.push(position);
     player.arboretum.cards.push(card);
+    let index = player.hand.indexOf(card);
+    if(index !== -1) {
+      player.hand.splice(index, 1);
+    }
+  }
+
+  discard(card) {
+     // todo, validate move.
+     let player = this.getPlayer(this.turn);
+     let index = player.hand.indexOf(card);
+     if(index !== -1) {
+       player.hand.splice(index, 1);
+     }
+     player.discard.push(card);
   }
 
   validateEndOfTurn() {    
