@@ -348,8 +348,15 @@ export class GameState {
 
   static createNewGame(player_names) {
     let gs = new GameState();
+    let num_species = 10;
+    if (player_names.length <= 2) {
+      num_species = 6;
+    } if (player_names.length == 3) {
+      num_species = 8;
+    }
     for (let i = 1; i <= 8; i++) {
-      for (let species of Species) {
+      for (let j = 0; j < num_species; j++) {
+        let species = Species[j];
         gs.deck.push(new Card({"species": species, "value": i}));
       }
     }
