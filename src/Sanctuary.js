@@ -14,7 +14,7 @@ export class Sanctuary extends Component {
         let score = 0;
         for (let spec of Species) {
             let plus = Scorer.scoreSpecies(sanctuary, spec);
-            console.log(spec + " -> " + plus);
+            // console.log(spec + " -> " + plus);
             score += plus;
         }
         let rows = [];

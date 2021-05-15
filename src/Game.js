@@ -14,6 +14,7 @@ const GameStates = [
   "PLAY",
   "DISCARD",
   "GAME_OVER",
+  "SPECTATOR",
 ];
 
 const MaxCards = 9;
@@ -74,8 +75,13 @@ class Game extends Component {
   }
 
   async onTurnEnd() {
+      console.log("On turn end");
       this.state.game_model.endTurn();
-      await this.props.database.ref("game/" + this.props.game_uuid).set(this.state.game_model.serialize());
+      await this.props.database.ref("game/" + this.props.match.params.id).set(this.state.game_model.serialize());
+      this.onGameModelChanged(this.state.game_model);
+      this.setState({
+          selected_card: -1,
+      });
   }
 
   selectedCard(index) {
@@ -103,13 +109,10 @@ class Game extends Component {
   }
 
   onDiscard() {
+    console.log("onDiscard");
     let player = this.state.game_model.getPlayer(this.state.player);
     let card = player.hand[this.state.selected_card];
     this.state.game_model.discard(card);
-    this.setState({
-      selected_card: -1,
-      game_state: "WAITING_FOR_TURN",
-    });
     this.onTurnEnd();
   }
 

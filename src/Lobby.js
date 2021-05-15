@@ -43,8 +43,7 @@ class Lobby extends React.Component {
     async onLobbyUpdate(lobby) {
         if (!lobby.val()) return;
         if (lobby.val().game_id) {
-            // this.database.ref("lobby/" + this.) unsub?
-            this.props.onGameStarted(lobby.val().game_id);
+            this.props.history.push("/game/" + lobby.val().game_id);
         }
         this.setState({
             current_lobby: lobby.val(),
