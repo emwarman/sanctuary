@@ -48,6 +48,22 @@
   float: left;
 }
 
+.arboretum {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), var(--tile-size));
+  grid-gap: 0;
+  align-self: flex-start;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 .card.selected {
   border: 3px solid red;
+}
+
+.playable {
+
+  border: 3px solid orange;
 }

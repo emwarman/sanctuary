@@ -37,12 +37,13 @@ export class Player {
     if (json) {
       this.username = json["name"];
       this.hand = json["hand"].map(c => new Card(c));
-      this.arboretum = new Arboretum(json["arboretum"] || []);
+      console.log(json);
+      this.sanctuary = new Sanctuary(json["sanctuary"] || []);
       this.discard = (json["discard"] || []).map(c => new Card(c));
     } else {
       this.username = "";
       this.hand = [];
-      this.arboretum = new Arboretum([]);
+      this.sanctuary = new Sanctuary([]);
       this.discard = [];
     }
   }
@@ -51,32 +52,169 @@ export class Player {
     return {
       "name": this.username,
       "hand": this.hand.map(c => c.serialize()),
-      "arboretum": this.arboretum.serialize(),
+      "sanctuary": this.sanctuary.serialize(),
       "discard": this.discard.map(c => c.serialize()),
     }
   }
 }
 
-export class Arboretum {
+export class Sanctuary {
   constructor(json_list) {
-    this.positions = json_list.map(c => c.position)
-    this.cards = json_list.map(c => new Card(c.card))
+    console.log(json_list);
+    this.stones = json_list.stones.map(c => new Stone(c))
   }
 
-  validate() {
-    // todo..
+  hasStone(position) {
+    for (let stone of this.stones) {
+      if (stone.position.equals(position)) {
+        return true;
+      }
+    };
+  }
+
+  addStone(position, card) {
+    this.stones.push(new Stone({"position": position, "card": card}))
+  }
+
+  getStone(position) {
+    for (let stone of this.stones) {
+      if (stone.position.equals(position)) {
+        return stone
+      }
+    }
+  }
+
+  isPlayable(position) {
+    console.log(position);
+    // If card has been played at this location, return false.
+    if (this.hasStone(position)) {
+      return false
+    }
+    // If no stones have been played, [0,0] is playable.
+    if (this.stones.length === 0 && position.equals(Position.center())) {
+      return true
+    }
+    for (let stone of this.stones) {
+      if (stone.position.isAdjacent(position)) {
+        return true
+      }
+    }
+    return false
+  }
+
+  minX() {
+    let min_x = 0
+    this.stones.forEach(stone => {
+      if (stone.position.x - 1 < min_x) {
+        min_x = stone.position.x -1
+      }
+    })
+    return min_x
+  }
+
+  maxX() {
+    let max_x = 0
+    this.stones.forEach(stone => {
+      if (stone.position.x + 1 > max_x) {
+        max_x = stone.position.x + 1
+      }
+    })
+    return max_x
+  }
+
+  minY() {
+    let min_y = 0
+    this.stones.forEach(stone => {
+      if (stone.position.y - 1 < min_y) {
+        min_y = stone.position.y - 1
+      }
+    })
+    return min_y
+  }
+
+  maxY() {
+    let max_y = 0
+    this.stones.forEach(stone => {
+      if (stone.position.y + 1 > max_y) {
+        max_y = stone.position.y + 1
+      }
+    })
+    return max_y
   }
 
   serialize() {
-    let list = [];
-    console.log(this.cards[0]);
-    for (let i = 0; i < this.positions.length; i++) {
-      list.push({
-        "position": this.positions[i],
-        "card": this.cards[i].serialize(),
-      });
+    return {
+      "stones": this.stones.map(p => p.serialize())
+    };
+  }
+}
+
+export class Stone {
+  constructor(json) {
+    this.position = new Position(json.position);
+    this.card = new Card(json.card);
+  }
+
+  serialize() {
+    return {
+      "position": this.position.serialize(),
+      "card": this.card.serialize()
     }
-    return list;
+  }
+}
+
+export class Position {
+  constructor(json) {
+    this.x = json.x;
+    this.y = json.y;
+  }
+
+  left() {
+    return new Position({"x": this.x-1, "y": this.y});
+  }
+
+  right() {
+    return new Position({"x": this.x+1, "y": this.y});
+  }
+
+  top() {
+    return new Position({"x": this.x, "y": this.y+1});
+  }
+
+  bottom() {
+    return new Position({"x": this.x, "y": this.y-1});
+  }
+
+  isAdjacent(position) {
+    if (this.right().equals(position) ||
+        this.left().equals(position) ||
+        this.top().equals(position) ||
+        this.bottom().equals(position)) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  static center() {
+    return new Position({"x": 0, "y": 0})
+  }
+
+  str() {
+    return `${this.x},${this.y}`
+  }
+
+  equals(that) {
+    if (this.x === that.x && this.y === that.y) {
+      return true
+    }
+  }
+
+  serialize() {
+    return {
+      "x": this.x,
+      "y": this.y,
+    }
   }
 }
 
@@ -170,8 +308,7 @@ export class GameState {
   playCard(card, position) {
     // todo, validate move.
     let player = this.getPlayer(this.turn);
-    player.arboretum.positions.push(position);
-    player.arboretum.cards.push(card);
+    player.sanctuary.addStone(position, card);
     let index = player.hand.indexOf(card);
     if(index !== -1) {
       player.hand.splice(index, 1);
@@ -207,7 +344,6 @@ export class GameState {
   validateEndOfTurn() {    
     for (let player of this.players) {
       assertValidGameState(player.hand.length == 7);
-      player.arboretum.validate();
     }
   }
 

@@ -1,7 +1,7 @@
 import './Game.css';
 import Card from './Card.js';
 import {GameState} from './model.mjs'
-import {Arboretum} from './Arboretum'
+import {Sanctuary} from './Sanctuary'
 import React, { Component } from 'react';
 
 const GameStates = [
@@ -92,6 +92,8 @@ export default class Game extends Component {
       selected_card: -1,
       game_state: "DISCARD",
     });
+    console.log(this.state.game_model);
+    this.forceUpdate();
   }
 
   onDiscard() {
@@ -117,7 +119,7 @@ export default class Game extends Component {
     let sanctuary_components = this.state.game_model.players.map((player) => {
       let enabled = this.state.game_state == "PLAY" && this.state.selected_card > 0;
       return <div>
-        <Arboretum name={player.username} arboretum={player.arboretum} enabled={enabled} onPlay={this.onPlay.bind(this)}></Arboretum>
+        <Sanctuary game_state={this.state.game_state} name={player.username} sanctuary={player.sanctuary} enabled={enabled} onPlay={this.onPlay.bind(this)}></Sanctuary>
       </div>
     });
     let discard = !(this.state.game_state == "DISCARD" && this.state.selected_card > 0);

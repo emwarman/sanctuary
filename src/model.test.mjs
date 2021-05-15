@@ -10,18 +10,25 @@ let gs = new GameState({
             "discard": [
                 {"species": "cassia", "value": 2}
             ],
-            "arboretum": [],
+            "arboretum": {
+                "positions": [
+                    {"x": 0, "y": 0, "empty": true},
+                ]
+            },
         },
         {
             "name": "username2",
             "hand": [],
             "discard": [],
-            "arboretum": [
-                {
-                    "position": [0,0],
-                    "card": {"species": "cassia", "value": 8},
+            "arboretum": {
+                    "positions": [
+                        {"x": 0, "y": 0, "empty": false, "card": {"species": "cassia", "value": 8}},
+                        {"x": -1, "y": 0, "empty": true},
+                        {"x": 1, "y": 0, "empty": true},
+                        {"x": 0, "y": -1, "empty": true},
+                        {"x": 0, "y": 1, "empty": true},
+                    ]
                 }
-            ]
         }
     ],
     "turn": "username1",
