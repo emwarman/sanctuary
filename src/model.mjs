@@ -60,7 +60,6 @@ export class Player {
 
 export class Sanctuary {
   constructor(json_list) {
-    console.log(json_list);
     this.stones = json_list.stones.map(c => new Stone(c))
   }
 
@@ -105,8 +104,8 @@ export class Sanctuary {
   minX() {
     let min_x = 0
     this.stones.forEach(stone => {
-      if (stone.position.x - 1 < min_x) {
-        min_x = stone.position.x -1
+      if (stone.position.x < min_x) {
+        min_x = stone.position.x
       }
     })
     return min_x
@@ -115,8 +114,8 @@ export class Sanctuary {
   maxX() {
     let max_x = 0
     this.stones.forEach(stone => {
-      if (stone.position.x + 1 > max_x) {
-        max_x = stone.position.x + 1
+      if (stone.position.x > max_x) {
+        max_x = stone.position.x
       }
     })
     return max_x
@@ -125,8 +124,8 @@ export class Sanctuary {
   minY() {
     let min_y = 0
     this.stones.forEach(stone => {
-      if (stone.position.y - 1 < min_y) {
-        min_y = stone.position.y - 1
+      if (stone.position.y < min_y) {
+        min_y = stone.position.y
       }
     })
     return min_y
@@ -135,8 +134,8 @@ export class Sanctuary {
   maxY() {
     let max_y = 0
     this.stones.forEach(stone => {
-      if (stone.position.y + 1 > max_y) {
-        max_y = stone.position.y + 1
+      if (stone.position.y > max_y) {
+        max_y = stone.position.y
       }
     })
     return max_y
@@ -146,6 +145,118 @@ export class Sanctuary {
     return {
       "stones": this.stones.map(p => p.serialize())
     };
+  }
+}
+
+export class ScorePath {
+  constructor(json) {
+    this.path = json.path.map(c => new Stone(c))
+  }
+
+  end() {
+    return this.path[this.path.length - 1]
+  }
+
+  canAdd(stone) {
+    if (this.end().card.value < stone.card.value) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  add(stone) {
+    let path = this.path
+    path.push(stone)
+    return new ScorePath({"path": path})
+  }
+
+  canScore() {
+    if (this.path.length < 2) {
+      return false
+    }
+    if (this.path[0].card.species === this.end().card.species) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  score() {
+    // base score
+    let score = this.path.length
+    // add same species multiplier
+    let species = new Set(this.path.map(s => s.card.species))
+    if (this.path.length >= 4 && species.length == 1) {
+      score *= 2
+    }
+    // add 1 bonus
+    if (this.path[0].card.value === 1) {
+      score += 1
+    }
+    // add 8 bonus
+    if (this.end().card.value === 8) {
+      score += 2
+    }
+    return score
+  }
+
+  serialize() {
+    return {
+      "stones": this.stones.map(p => p.serialize())
+    }
+  }
+}
+
+export class Scorer {
+  constructor(json) {
+    this.sanctuary = new Sanctuary(json.sanctuary)
+  }
+
+  scoreSpecies(species) {
+    let pathsToEval = this.sanctuary.stones.filter(s => s.card.species === species && s.card.value <= 7).map(s => new ScorePath({"path": [s]}))
+    let score = 0
+    while (pathsToEval.length > 0) {
+      let path = pathsToEval.pop()
+      if (path.canScore()) {
+        let pathScore = path.score()
+        if (pathScore > score) {
+          score = pathScore
+        }
+      }
+      let currentNode = path.end()
+      if (this.sanctuary.hasStone(currentNode.position.left())) {
+        let stone = this.sanctuary.getStone(currentNode.position.left())
+        if (path.canAdd(stone)) {
+          pathsToEval.push(path.add(stone))
+        }
+      }
+      if (this.sanctuary.hasStone(currentNode.position.right())) {
+        let stone = this.sanctuary.getStone(currentNode.position.right())
+        if (path.canAdd(stone)) {
+          pathsToEval.push(path.add(stone))
+        }
+      }
+      if (this.sanctuary.hasStone(currentNode.position.top())) {
+        let stone = this.sanctuary.getStone(currentNode.position.top())
+        if (path.canAdd(stone)) {
+          pathsToEval.push(path.add(stone))
+        }
+      }
+      if (this.sanctuary.hasStone(currentNode.position.bottom())) {
+        let stone = this.sanctuary.getStone(currentNode.position.bottom())
+        if (path.canAdd(stone)) {
+          pathsToEval.push(path.add(stone))
+        }
+      }
+    }
+    return score
+  }
+
+  serialize() {
+    return {
+      "sanctuary": this.sanctuary.serialize()
+    }
   }
 }
 
