@@ -5,6 +5,7 @@ import {Sanctuary} from './Sanctuary'
 import React, { Component } from 'react';
 import {GiCardDraw, GiUpCard} from 'react-icons/gi';
 import Discard from './Discard'
+import { withRouter } from 'react-router-dom';
 
 const GameStates = [
   "JOINING_GAME",
@@ -17,7 +18,7 @@ const GameStates = [
 
 const MaxCards = 9;
 
-export default class Game extends Component {
+class Game extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -66,7 +67,8 @@ export default class Game extends Component {
   }
 
   async componentDidMount() {
-    this.network_state_callback = this.props.database.ref("game/" + this.props.game_uuid).on('value', snapshot => {
+      console.log(this.props);
+    this.network_state_callback = this.props.database.ref("game/" + this.props.match.params.id).on('value', snapshot => {
         this.onGameModelChanged(new GameState(snapshot.val()));
     });
   }
@@ -184,3 +186,5 @@ export default class Game extends Component {
     );
   }
 }
+
+export default withRouter(Game);

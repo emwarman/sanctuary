@@ -2,8 +2,15 @@ import React, { Component } from 'react';
 import Login from './Login';
 import Game from './Game';
 import Lobby from './Lobby';
+import LobbyBrowser from './LobbyBrowser';
 import firebase from "firebase/app";
 import "firebase/database";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 
 const AppStates = [
   "CONNECTING",
@@ -15,10 +22,12 @@ const AppStates = [
 export default class App extends Component {
   constructor(props) {
     super(props)
+    console.log(props);
     this.state = {
       database: null,
-      app_state: "LOGIN",
+      app_state: "CONNECTING",
       game_id: null,
+      lobby_uuid: null,
       username: null
     }
   }
@@ -61,26 +70,51 @@ export default class App extends Component {
     });
   }
 
-  render() {
+  onConnect(lobby_uuid) {
+    this.setState({
+      lobby_uuid: lobby_uuid,
+      app_state: "LOBBY",
+    });
+  }
+
+  render_impl() {
     let footer =  <footer id="footer">Made with 💔 in a gloomy overpriced SF appartment</footer>;
     if (this.state.app_state == "CONNECTING") {
       return <h1>Connecting...</h1>
     }
-    if (this.state.app_state == "LOGIN") {
+    if (!this.state.username) {
       return <div>
         <Login onLogin={this.onLogin.bind(this)}></Login>
         {footer}
       </div>;
     }
-    if (this.state.app_state == "LOBBY") {
-      return <div>
+
+    return <Switch>
+      <Route path="/lobby/:id" render={(props) => {
+        return <div>
           <Lobby username={this.state.username} database={this.state.database} onGameStarted={this.onGameStarted.bind(this)}></Lobby>
           {footer}
+        </div>;
+      }}>
+      </Route>
+      <Route path="/lobby">
+        <div>
+          <LobbyBrowser username={this.state.username} database={this.state.database} onConnect={this.onConnect.bind(this)}></LobbyBrowser>
+          {footer}
         </div>
-    }
-    if (this.state.app_state == "GAME") {
-      return <Game username={this.state.username} game_uuid={this.state.game_uuid} database={this.state.database}></Game>
-    }
-    return <div>Oops something went wrong. .</div>
+      </Route>
+      <Route path="/game/:id">
+        <Game username={this.state.username} database={this.state.database}></Game>
+      </Route>
+      <Route path="/">
+        <Redirect to="/lobby"></Redirect>
+      </Route>
+    </Switch>;
+  }
+
+  render() {
+    return <Router>
+      {this.render_impl()}
+    </Router>
   }
 }

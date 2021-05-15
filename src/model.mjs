@@ -209,12 +209,8 @@ export class ScorePath {
 }
 
 export class Scorer {
-  constructor(json) {
-    this.sanctuary = new Sanctuary(json.sanctuary)
-  }
-
-  scoreSpecies(species) {
-    let pathsToEval = this.sanctuary.stones.filter(s => s.card.species === species && s.card.value <= 7).map(s => new ScorePath({"path": [s]}))
+  static scoreSpecies(sanctuary, species) {
+    let pathsToEval = sanctuary.stones.filter(s => s.card.species === species && s.card.value <= 7).map(s => new ScorePath({"path": [s]}))
     let score = 0
     while (pathsToEval.length > 0) {
       let path = pathsToEval.pop()
@@ -225,38 +221,32 @@ export class Scorer {
         }
       }
       let currentNode = path.end()
-      if (this.sanctuary.hasStone(currentNode.position.left())) {
-        let stone = this.sanctuary.getStone(currentNode.position.left())
+      if (sanctuary.hasStone(currentNode.position.left())) {
+        let stone = sanctuary.getStone(currentNode.position.left())
         if (path.canAdd(stone)) {
           pathsToEval.push(path.add(stone))
         }
       }
-      if (this.sanctuary.hasStone(currentNode.position.right())) {
-        let stone = this.sanctuary.getStone(currentNode.position.right())
+      if (sanctuary.hasStone(currentNode.position.right())) {
+        let stone = sanctuary.getStone(currentNode.position.right())
         if (path.canAdd(stone)) {
           pathsToEval.push(path.add(stone))
         }
       }
-      if (this.sanctuary.hasStone(currentNode.position.top())) {
-        let stone = this.sanctuary.getStone(currentNode.position.top())
+      if (sanctuary.hasStone(currentNode.position.top())) {
+        let stone = sanctuary.getStone(currentNode.position.top())
         if (path.canAdd(stone)) {
           pathsToEval.push(path.add(stone))
         }
       }
-      if (this.sanctuary.hasStone(currentNode.position.bottom())) {
-        let stone = this.sanctuary.getStone(currentNode.position.bottom())
+      if (sanctuary.hasStone(currentNode.position.bottom())) {
+        let stone = sanctuary.getStone(currentNode.position.bottom())
         if (path.canAdd(stone)) {
           pathsToEval.push(path.add(stone))
         }
       }
     }
     return score
-  }
-
-  serialize() {
-    return {
-      "sanctuary": this.sanctuary.serialize()
-    }
   }
 }
 
@@ -445,10 +435,10 @@ export class GameState {
   }
 
   rightToScore(species) {
-    let scoreEight = true
+    let scoreEight = true;
     for (let player of this.players) {
       if (player.hand.filter(c => (c.value === 1 && c.species === species)).length === 1) {
-        scoreEight = false
+        scoreEight = false;
       }
     }
     
@@ -466,7 +456,7 @@ export class GameState {
       let playerScore = 0
       if (playerHand.length > 0) {
         playerScore = playerHand.reduce((score, v) => {
-          if (v < 8 || score8) {
+          if (v < 8 || scoreEight) {
             return score + v
           }
         })
@@ -475,8 +465,8 @@ export class GameState {
         scoringPlayers.push(player)
       }
       if (playerScore > maxScore) {
-        maxScore = playerScore
-        scoringPlayers = [player]
+        maxScore = playerScore;
+        scoringPlayers = [player];
       }
     }
     return scoringPlayers
