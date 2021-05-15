@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import { GiFruitTree } from 'react-icons/gi';
+import { GiStoneSphere } from 'react-icons/gi';
+import {IconContext} from 'react-icons'
+import './Card.css'
 
 const speciesColors = {
     "maple": "darkorange",
@@ -25,7 +27,10 @@ class Card extends Component {
         let classes = "card" + (this.props.selected ? " selected" : "") + (this.props.className || "");
         return(
             <div className={classes} onClick={this.props.onClick}>
-                <span style={{color: speciesColor}}> {this.props.value} <GiFruitTree/ ></span>
+                <div className={this.props.species + " number"}> {this.props.value}</div>
+                <IconContext.Provider value={{ className: 'cardgraphic ' +  this.props.species}}>
+                    <GiStoneSphere />
+                </IconContext.Provider>
             </div>
         )
     }

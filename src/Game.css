@@ -37,19 +37,6 @@
   }
 }
 
-.card {
-  border: 1px solid #999;
-  border-radius: 10px;
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  width: 100px;
-  height: 150px;
-  float: left;
-  background-color: white;
-  margin: 2px;
-}
-
 .arboretum {
   display: grid;
   grid-template-columns: repeat(var(--cols), var(--tile-size));
@@ -61,19 +48,19 @@
   box-sizing: border-box;
 }
 
-.card.selected {
-  border: 3px solid red;
+#bottom-pannel {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
 }
 
-.card.placeholder {
-  background-color:rgba(0, 0, 0, 0.2);
+#bottom-pannel-left {
+  float: left;
+  height: 100%;
 }
 
-.playable {
-  border: 3px solid orange;
-}
-
-.card.offset {
-  margin-left: -90px;
-  margin-top: 30px;
+#bottom-pannel-right {
+  float: right;
+  height: 100%;
+  padding-right: 150px;
 }

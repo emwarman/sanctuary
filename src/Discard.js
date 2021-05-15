@@ -7,15 +7,15 @@ export default function Discard(props) {
     let len = cards.length;
     let card_components = [];
     if (len == 0) {
-        card_components.push(<div className="card"></div>)
+        card_components.push(<div className={"card placeholder" + (props.small ? " small" : "")}></div>)
     }
     if (len == 1) {
-        card_components = [<Card species={cards[0].species} value={cards[0].value}></Card>];
+        card_components = [<Card className={props.small ? " small" : ""} species={cards[0].species} value={cards[0].value}></Card>];
     }
     if (len > 1) {
         card_components = [
-            <Card species={cards[len-2].species} value={cards[len-2].value}></Card>,
-            <Card className=" offset" species={cards[len-1].species} value={cards[len-1].value}></Card>
+            <Card className={props.small ? " small" : ""} species={cards[len-2].species} value={cards[len-2].value}></Card>,
+            <Card className={" offset" + (props.small ? " small" : "")} species={cards[len-1].species} value={cards[len-1].value}></Card>
         ]
     }
     let is_enabled = props.game_state == "DRAW" && len > 0;

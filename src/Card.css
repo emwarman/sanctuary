@@ -1,0 +1,56 @@
+.card {
+    border: 1px solid #999;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    width: 100px;
+    height: 150px;
+    float: left;
+    background-color: white;
+    margin: 2px;
+}
+
+.card.small {
+    font-size: 12px;
+    width: 50px;
+    height: 75px;
+}
+
+.card.selected {
+    border: 3px solid red;
+}
+
+.card.placeholder {
+    background-color:rgba(0, 0, 0, 0.2);
+}
+
+.playable {
+    border: 3px solid orange;
+}
+
+.number {
+    text-align: left;
+    margin-left: 7px;
+}
+
+.card.offset {
+    margin-left: -60px;
+    margin-top: 0px;
+}
+
+.cardgraphic {
+    width: 100%;
+    height: 70%;
+}
+
+.maple { color: rgba(255, 140, 0, 0.781) }
+.cherryBlossom { color: rgba(255, 105, 180, 0.801) }
+.blueSpruce { color: rgba(47, 79, 79, 0.699) }
+.jacaranda { color: rgba(148, 0, 211, 0.644) }
+.oak { color: rgba(139, 69, 19, 0.753) }
+.dogwood { color: rgba(169, 169, 169, 0.76) }
+.willow { color: rgba(85, 107, 47, 0.671) }
+.tulipPoplar { color: rgba(50, 205, 50, 0.705) }
+.cassia { color: rgba(255, 217, 0, 0.664) }
+.royalPoinciana { color: rgba(255, 0, 0, 0.726) }

@@ -117,7 +117,7 @@ export class Sanctuary {
       if (stone.position.x > max_x) {
         max_x = stone.position.x
       }
-    })
+    });
     return max_x
   }
 
@@ -125,7 +125,7 @@ export class Sanctuary {
     let min_y = 0
     this.stones.forEach(stone => {
       if (stone.position.y < min_y) {
-        min_y = stone.position.y
+        min_y = stone.position.y;
       }
     })
     return min_y

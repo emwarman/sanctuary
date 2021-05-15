@@ -62,14 +62,21 @@ export default class App extends Component {
   }
 
   render() {
+    let footer =  <footer id="footer">Made with 💔 in a gloomy overpriced SF appartment</footer>;
     if (this.state.app_state == "CONNECTING") {
       return <h1>Connecting...</h1>
     }
     if (this.state.app_state == "LOGIN") {
-      return <Login onLogin={this.onLogin.bind(this)}></Login>
+      return <div>
+        <Login onLogin={this.onLogin.bind(this)}></Login>
+        {footer}
+      </div>;
     }
     if (this.state.app_state == "LOBBY") {
-      return <Lobby username={this.state.username} database={this.state.database} onGameStarted={this.onGameStarted.bind(this)}></Lobby>
+      return <div>
+          <Lobby username={this.state.username} database={this.state.database} onGameStarted={this.onGameStarted.bind(this)}></Lobby>
+          {footer}
+        </div>
     }
     if (this.state.app_state == "GAME") {
       return <Game username={this.state.username} game_uuid={this.state.game_uuid} database={this.state.database}></Game>
