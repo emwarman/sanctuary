@@ -46,6 +46,8 @@
   width: 100px;
   height: 150px;
   float: left;
+  background-color: white;
+  margin: 2px;
 }
 
 .arboretum {
@@ -64,6 +66,10 @@
 }
 
 .playable {
-
   border: 3px solid orange;
+}
+
+.card.offset {
+  margin-left: -90px;
+  margin-top: 30px;
 }

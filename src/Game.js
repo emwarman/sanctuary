@@ -3,6 +3,8 @@ import Card from './Card.js';
 import {GameState} from './model.mjs'
 import {Sanctuary} from './Sanctuary'
 import React, { Component } from 'react';
+import {GiCardDraw, GiUpCard} from 'react-icons/gi';
+import Discard from './Discard'
 
 const GameStates = [
   "JOINING_GAME",
@@ -107,6 +109,18 @@ export default class Game extends Component {
     this.onTurnEnd();
   }
 
+  onDraw(player) {
+    this.state.game_model.drawDiscard(player);
+    if (this.state.game_model.getPlayer(this.state.player).hand.length >= MaxCards) {
+        this.setState({
+          game_state: "PLAY",
+        })
+      } else {
+         // this.state.game_model isn't internally understood by react state, so mutating it with drawDiscard() wont trigger rerender.
+        this.forceUpdate();
+      }
+  }
+
   render() {
     if (this.state.game_state == "JOINING_GAME") {
       return <div>Joining game as {this.state.player}... Please wait.</div>
@@ -117,29 +131,29 @@ export default class Game extends Component {
     );
   
     let sanctuary_components = this.state.game_model.players.map((player) => {
-      let enabled = this.state.game_state == "PLAY" && this.state.selected_card > 0;
+      let enabled = this.state.game_state == "PLAY" && this.state.selected_card > -1;
       return <div>
         <Sanctuary game_state={this.state.game_state} name={player.username} sanctuary={player.sanctuary} enabled={enabled} onPlay={this.onPlay.bind(this)}></Sanctuary>
+        <Discard game_state={this.state.game_state} cards={player.discard} player={player.username} onDraw={_ => this.onDraw(player.username)}></Discard>
       </div>
     });
-    let discard = !(this.state.game_state == "DISCARD" && this.state.selected_card > 0);
+    let discard = !(this.state.game_state == "DISCARD" && this.state.selected_card > -1);
     return (
       <div>
         <h1>Sanctuary</h1>
         <div>Game State: <b>{this.state.game_state}</b></div>
         <div>Deck: {this.state.game_model.deck.length} cards</div>
         <button disabled={this.state.game_state != "DRAW"} onClick={this.drawPressed.bind(this)}>
-          Draw Card
+          Draw Card<GiUpCard/>
         </button>
         <button disabled={discard} onClick={this.onDiscard.bind(this)}>
-          Discard
+          Discard <GiCardDraw/>
         </button>
         <div><h3>Your Hand: ({hand_view.length})</h3></div>
         <div id="hand">{hand_view}</div>
         <br clear="all"></br>
         <div>Sanctuaries: {sanctuary_components}</div>
         <br clear="all"></br>
-        <div>Made with 💔 in a gloomy overpriced SF appartment</div>
       </div>
     );
   }

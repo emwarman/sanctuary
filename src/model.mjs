@@ -38,12 +38,12 @@ export class Player {
       this.username = json["name"];
       this.hand = json["hand"].map(c => new Card(c));
       console.log(json);
-      this.sanctuary = new Sanctuary(json["sanctuary"] || []);
+      this.sanctuary = new Sanctuary(json["sanctuary"] || {"stones": []});
       this.discard = (json["discard"] || []).map(c => new Card(c));
     } else {
       this.username = "";
       this.hand = [];
-      this.sanctuary = new Sanctuary([]);
+      this.sanctuary = new Sanctuary({"stones": []});
       this.discard = [];
     }
   }
@@ -303,6 +303,14 @@ export class GameState {
     }
     assertValidGameState(this.deck.length > 0);
     player.hand.push(this.deck.shift());
+  }
+
+  drawDiscard(player_name) {
+    let player = this.getPlayer(player_name);
+    assertValidGameState(player.discard.length > 0);
+
+    let currentPlayer = this.getPlayer(this.turn);
+    currentPlayer.hand.push(player.discard.pop());
   }
 
   playCard(card, position) {

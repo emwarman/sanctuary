@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './Lobby.css';
 import {GameState} from './model.mjs'
-
+import {BsFillPersonFill} from 'react-icons/bs';
+import {ImEnter} from 'react-icons/im';
 const prettyms = require('pretty-ms');
 
 function uuidv4() {
@@ -106,18 +107,22 @@ export default class Lobby extends React.Component {
             let message = can_start ? "Waiting for host to start." : "Waiting for more players...";
             let players = [];
             for (let p of this.state.current_lobby.users) {
-                players.push(<div>{p}</div>);
+                players.push(<div><BsFillPersonFill/>{p}</div>);
             }
             return (<body>
                 <h1>Current Lobby</h1>
+                <h2>Players</h2>
                 {players}
                 {start_button}
                 <div>{message}</div>
             </body>);
         }
 
-        let lobbies = [];
-        for (let lobby of this.state.lobbies) {
+        let lobbies_components = [];
+        let lobbies = this.state.lobbies.filter(lobby => Date.now() - lobby.val.created_ms < 1*60*60*1000);
+        lobbies.filter((lobby) => lobby.val.game_id ? false : true);
+        lobbies.sort((a, b) => a.created_ms > b.created_ms);
+        for (let lobby of lobbies) {
             let users_string = lobby.val.users.join(',');
             let age = 'unknown';
             if (lobby.val.created_ms) {
@@ -128,14 +133,15 @@ export default class Lobby extends React.Component {
                 }
             }
             let selected = lobby.uuid == this.state.current_lobby_uuid;
-            lobbies.push(<div className='lobby-row' id={selected ? 'joined-lobby' : ''}>players: {users_string} age: {age}<button onClick={this.onJoin.bind(this, lobby.uuid)}>join</button></div>)
+            lobbies_components.push(<div className='lobby-row' id={selected ? 'joined-lobby' : ''}><button className="join" onClick={this.onJoin.bind(this, lobby.uuid)}>join <ImEnter/></button>players: {users_string} age: {age}</div>)
         }
         
         return (
             <body>
                 <h1>Lobbies</h1>
-                <button onClick={this.createLobby.bind(this)}>Create Lobby</button>
-                {lobbies}
+                <div>Welcome {this.props.username}   <button onClick={this.createLobby.bind(this)}>Create Lobby</button></div>
+                
+                {lobbies_components}
             </body>
         );
     }

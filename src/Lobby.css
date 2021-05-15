@@ -5,3 +5,7 @@
 #joined-lobby {
     background-color: cadetblue;
 }
+
+button.join {
+    margin-right: 15px;
+}

@@ -30,6 +30,7 @@ export default class Login extends React.Component {
         }
         return (
             <form onSubmit={this.handleSubmit}>
+                <h2>Login</h2>
                 <label>
                     Username:
                     <input type="text" value={this.state.value} onChange={this.handleChange} />

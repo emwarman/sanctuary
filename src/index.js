@@ -9,6 +9,7 @@ const rootElement = document.getElementById("root")
 ReactDOM.render(
   <React.StrictMode>
     <App />
+    <footer id="footer">Made with 💔 in a gloomy overpriced SF appartment</footer>
   </React.StrictMode>,
   rootElement
 );
