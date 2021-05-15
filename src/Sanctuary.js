@@ -19,9 +19,9 @@ export class Sanctuary extends Component {
                     let card = sanctuary.getStone(position).card
                     row.push(<div className="gridSquare"><Card species={card.species} value={card.value}/></div>)
                 } else if (sanctuary.isPlayable(position) && this.props.game_state == "PLAY") {
-                    row.push(<div className="gridSquare card playable" onClick={() => this.props.onPlay(position)}></div>)
+                    row.push(<div className="gridSquare card playable placeholder" onClick={() => this.props.onPlay(position)}></div>)
                 } else {
-                    row.push(<div className="gridSquare card"></div>)
+                    row.push(<div className="gridSquare card placeholder"></div>)
                 }
             }
             rows.push(<div>{row}</div>)
