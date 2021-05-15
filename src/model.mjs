@@ -187,7 +187,7 @@ export class ScorePath {
     let score = this.path.length
     // add same species multiplier
     let species = new Set(this.path.map(s => s.card.species))
-    if (this.path.length >= 4 && species.length == 1) {
+    if (this.path.length >= 4 && species.size == 1) {
       score *= 2
     }
     // add 1 bonus
@@ -442,6 +442,44 @@ export class GameState {
        player.hand.splice(index, 1);
      }
      player.discard.push(card);
+  }
+
+  rightToScore(species) {
+    let scoreEight = true
+    for (let player of this.players) {
+      if (player.hand.filter(c => (c.value === 1 && c.species === species)).length === 1) {
+        scoreEight = false
+      }
+    }
+    
+    let maxScore = 0
+    let scoringPlayers = []
+    for (let player of this.players) {
+      // let playerScore = player.hand.reduce((score, v) => {
+      //   if (v.species === species) {
+      //     if (v.value < 8 || score8) {
+      //       score += v.value
+      //     }
+      //   }
+      // })
+      let playerHand = player.hand.filter(c => c.species === species).map(c => c.value);
+      let playerScore = 0
+      if (playerHand.length > 0) {
+        playerScore = playerHand.reduce((score, v) => {
+          if (v < 8 || score8) {
+            return score + v
+          }
+        })
+      }
+      if (playerScore == maxScore) {
+        scoringPlayers.push(player)
+      }
+      if (playerScore > maxScore) {
+        maxScore = playerScore
+        scoringPlayers = [player]
+      }
+    }
+    return scoringPlayers
   }
 
   endTurn() {
