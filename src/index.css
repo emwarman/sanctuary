@@ -26,14 +26,14 @@ time, mark, audio, video {
 html {
   margin: 0;
   height: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 body {
   
   margin: 0;
   height: 100%;
-  font-family: 'Trattatello, fantasy';
+  font-family: 'helvetica';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -42,8 +42,6 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  padding-left: 5%;
-  padding-right: 5%;
 }
 
 code {
@@ -56,4 +54,41 @@ code {
   bottom: 0;
   width: 100%;
   height: 2.5rem;            /* Footer height */
+}
+
+#lobby_table {
+  width: 100%;
+}
+
+.lobby-age-column {
+  width: 100px;
+}
+
+.lobby-buttons-column {
+  width: 260px;
+  overflow: hidden;
+}
+
+.lobby-max-column {
+  width: 120px;
+}
+
+#create-lobby-button {
+  margin-bottom: 10px;
+  /* margin-right: 0;
+  right: 110px;
+  top: 30px;
+  float: right;
+  position: fixed; */
+  /* float: right; */
+}
+
+.login {
+  padding-top: 10px;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.login h3 {
+  margin-top: 30px;
 }

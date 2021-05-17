@@ -64,3 +64,34 @@
   height: 100%;
   padding-right: 150px;
 }
+
+.active {
+  color: rgba(255, 25, 25, 0.438);
+  animation: blink-animation 2s steps(20, start) infinite;
+  -webkit-animation: blink-animation 2s steps(20, start) infinite;
+}
+@keyframes blink-animation {
+  to {
+    color: rgb(255, 25, 25);
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: rgb(255, 25, 25);
+  }
+}
+
+.draw-button {
+  position: absolute;
+  right: auto;
+  left: 8px;
+  bottom: 10px;
+}
+
+.draw-button.small {
+  font-size: 50%;
+}
+
+.lost-points {
+  text-decoration: line-through;
+}

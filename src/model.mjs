@@ -84,7 +84,6 @@ export class Sanctuary {
   }
 
   isPlayable(position) {
-    console.log(position);
     // If card has been played at this location, return false.
     if (this.hasStone(position)) {
       return false
@@ -149,8 +148,12 @@ export class Sanctuary {
 }
 
 export class ScorePath {
-  constructor(json) {
-    this.path = json.path.map(c => new Stone(c))
+  constructor(path) {
+    this.path = path || [];
+  }
+
+  start() {
+    return this.path[0];
   }
 
   end() {
@@ -166,9 +169,9 @@ export class ScorePath {
   }
 
   add(stone) {
-    let path = this.path
-    path.push(stone)
-    return new ScorePath({"path": path})
+    let path = Array.from(this.path);
+    path.push(stone);
+    return new ScorePath(path);
   }
 
   canScore() {
@@ -210,14 +213,14 @@ export class ScorePath {
 
 export class Scorer {
   static scoreSpecies(sanctuary, species) {
-    let pathsToEval = sanctuary.stones.filter(s => s.card.species === species && s.card.value <= 7).map(s => new ScorePath({"path": [s]}))
+    let pathsToEval = sanctuary.stones.filter(s => s.card.species === species && s.card.value <= 7).map(s => new ScorePath([s]))
     let score = 0
     while (pathsToEval.length > 0) {
       let path = pathsToEval.pop()
       if (path.canScore()) {
         let pathScore = path.score()
         if (pathScore > score) {
-          score = pathScore
+          score = pathScore;
         }
       }
       let currentNode = path.end()
@@ -337,7 +340,7 @@ export class GameState {
   constructor(json) {
     if (json) {
       this.players = json["players"].map(p => new Player(p));
-      this.deck = json["deck"].map(c => new Card(c));
+      this.deck = (json["deck"] || []).map(c => new Card(c));
       this.turn = json["turn"];
     } else {
       this.players = [];

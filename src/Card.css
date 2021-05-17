@@ -35,8 +35,9 @@
 }
 
 .card.offset {
-    margin-left: -60px;
-    margin-top: 0px;
+    position: fixed;
+    margin-left: 20px;
+    margin-top: 20px;
 }
 
 .cardgraphic {

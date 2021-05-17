@@ -19,13 +19,13 @@ export default function Discard(props) {
         ]
     }
     let is_enabled = props.game_state == "DRAW" && len > 0;
-    return <div>
+    return <div style={{display: 'grid', position: 'relative'}}>
         <div>
             <b>Discard ({props.player})</b> 
-            <button disabled={!is_enabled} onClick={props.onDraw}>
-                Draw Card<GiUpCard/>
-            </button>
         </div>
         {card_components}
+        <button className={"pure-button draw-button" + (props.small ? " small" : "")} disabled={!is_enabled} onClick={props.onDraw}>
+                Draw<GiUpCard/>
+        </button>
     </div>
 };

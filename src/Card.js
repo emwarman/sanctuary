@@ -16,24 +16,16 @@ const speciesColors = {
     "royalPoinciana": "red"
 };
 
-class Card extends Component {
-
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        var speciesColor = speciesColors[this.props.species];
-        let classes = "card" + (this.props.selected ? " selected" : "") + (this.props.className || "");
-        return(
-            <div className={classes} onClick={this.props.onClick}>
-                <div className={this.props.species + " number"}> {this.props.value}</div>
-                <IconContext.Provider value={{ className: 'cardgraphic ' +  this.props.species}}>
-                    <GiStoneSphere />
-                </IconContext.Provider>
-            </div>
-        )
-    }
+function Card(props) {
+    let classes = "card" + (props.selected ? " selected" : "") + (props.className || "");
+    return(
+        <div style={props.style} className={classes} onClick={props.onClick}>
+            <div className={props.species + " number"}> {props.value}</div>
+            <IconContext.Provider value={{ className: 'cardgraphic ' +  props.species}}>
+                <GiStoneSphere />
+            </IconContext.Provider>
+        </div>
+    );
 }
 
 export default Card;

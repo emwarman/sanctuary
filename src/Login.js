@@ -1,14 +1,37 @@
 import React, { Component } from 'react';
+import HelpComponent from './Help';
+
+import firebase from "firebase/app";
+import * as firebaseui from "firebaseui";
+// var firebaseui = require('firebaseui');
 
 const MIN_USERNAME = 5;
+const STORAGE_TOKEN = 'existing-username';
 export default class Login extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {value: ''};
-        console.log("Login");
+        const username = localStorage.getItem(STORAGE_TOKEN) || '';
+        this.state = {value: username};
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount(){
+        console.log("mounting login");
+        this.nameInput.focus();
+        console.log(firebase);
+        var ui = new firebaseui.auth.AuthUI(firebase.auth());
+        ui.start('#firebaseui-auth-container', {
+            signInOptions: [
+                { 
+                    provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                    requireDisplayName: true
+                },
+            ],
+            // Other config options...
+            signInFlow: 'popup',
+          });
     }
 
     handleChange(event) {
@@ -16,6 +39,7 @@ export default class Login extends React.Component {
     }
 
     handleSubmit(event) {
+        localStorage.setItem(STORAGE_TOKEN, this.state.value);
         this.props.onLogin(this.state.value);
         event.preventDefault();
     }
@@ -29,17 +53,19 @@ export default class Login extends React.Component {
         if (this.state.value.length >= MIN_USERNAME) {
             is_valid = true;
         }
-        return (
-            <form onSubmit={this.handleSubmit}>
+        return <div className="login">
+            {/* <div id='firebaseui-auth-container'></div> */}
+            <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit}>
                 <h2>Login</h2>
                 <label>
                     Username:
-                    <input type="text" value={this.state.value} onChange={this.handleChange} />
+                    <input ref={(input) => { this.nameInput = input; }} type="text" value={this.state.value} onChange={this.handleChange} />
                 </label>
                 {message}
-            <input disabled={!is_valid} type="submit" value="Submit" />
+            <button disabled={!is_valid} type="submit" className="pure-button">Enter as Guest</button>
             </form>
-        );
+            <HelpComponent/>
+        </div>;
     }
 }
 

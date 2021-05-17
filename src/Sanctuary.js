@@ -37,13 +37,14 @@ export class Sanctuary extends Component {
             let row = [];
             for (let x = sanctuary.minX() - margin; x <= sanctuary.maxX() + margin; x ++) {
                 let position = new Position({'x': x, 'y': y});
+                let key = `${x}:${y}`;
                 if (sanctuary.hasStone(position)) {
                     let card = sanctuary.getStone(position).card
-                    row.push(<div className="gridSquare small"><Card className=" small" species={card.species} value={card.value}/></div>)
+                    row.push(<div key={key} className="gridSquare small"><Card className=" small" species={card.species} value={card.value}/></div>)
                 } else if (this.props.enabled && sanctuary.isPlayable(position)) {
-                    row.push(<div className="gridSquare card playable placeholder small" onClick={() => this.props.onPlay(position)}></div>)
+                    row.push(<div key={key} className="gridSquare card playable placeholder small" onClick={() => this.props.onPlay(position)}></div>)
                 } else {
-                    row.push(<div className="gridSquare card placeholder small"></div>)
+                    row.push(<div key={key} className="gridSquare card placeholder small"></div>)
                 }
             }
             rows.push(<div>{row}</div>)

@@ -33,17 +33,22 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    firebase.initializeApp({
-      // apiKey: "API_KEY",
-      // authDomain: "PROJECT_ID.firebaseapp.com",
-      databaseURL: "https://sanctuary-7495f-default-rtdb.firebaseio.com/",
-      projectId: "sanctuary-7495f",
-      // storageBucket: "PROJECT_ID.appspot.com",
-      // messagingSenderId: "SENDER_ID",
-      // appId: "APP_ID",
-      // measurementId: "G-MEASUREMENT_ID",
-    });
-    
+    console.log("mounting app");
+    if (!firebase.apps.length) {
+      firebase.initializeApp({
+        apiKey: "AIzaSyAmYORTgoOVoyF7zZyFXe_XyzwZhZBM6tk",
+        authDomain: "sanctuary-7495f.web.app",
+        databaseURL: "https://sanctuary-7495f-default-rtdb.firebaseio.com/",
+        projectId: "sanctuary-7495f",
+        appId: "1:592764094021:web:6b8e29dbca457d1d97c52c"
+        // storageBucket: "PROJECT_ID.appspot.com",
+        // messagingSenderId: "SENDER_ID",
+        // measurementId: "G-MEASUREMENT_ID",
+      });
+    }else {
+        firebase.app(); // if already initialized, use that one
+    }
+
     var database = firebase.database();
     
     database.ref('lobbies/a').set({
@@ -78,14 +83,13 @@ export default class App extends Component {
   }
 
   render_impl() {
-    let footer =  <footer id="footer">Made with 💔 in a gloomy overpriced SF appartment</footer>;
+    let footer =  <footer id="footer">Made with 💔 in a gloomy, overpriced, San Francisco appartment.</footer>;
     if (this.state.app_state == "CONNECTING") {
       return <h1>Connecting...</h1>
     }
     if (!this.state.username) {
       return <div>
         <Login onLogin={this.onLogin.bind(this)}></Login>
-        {footer}
       </div>;
     }
 

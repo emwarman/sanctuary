@@ -66,7 +66,7 @@ class Lobby extends React.Component {
         let message = can_start ? "Waiting for host to start." : "Waiting for more players...";
         let players = [];
         for (let p of this.state.current_lobby.users) {
-            players.push(<div><BsFillPersonFill/>{p}</div>);
+            players.push(<div><BsFillPersonFill/>{p} {curr_lobby.host == p ? <b>(host)</b>: ""}</div>);
         }
         return (<body>
             <h1>Current Lobby</h1>

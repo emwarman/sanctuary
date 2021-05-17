@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import './Lobby.css';
 import {GameState} from './model.mjs'
 import {ImEnter} from 'react-icons/im';
+import {GiBinoculars} from 'react-icons/gi';
 import {uuidv4} from './uuid'
-import {
-    Redirect,
-  } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
+import {BsFillPersonFill, BsPerson} from 'react-icons/bs';
+
 const prettyms = require('pretty-ms');
 
-export default class LobbyBrowser extends React.Component {
+class LobbyBrowser extends React.Component {
     constructor(props) {
         super(props);
         this.database = props.database;
@@ -16,7 +17,6 @@ export default class LobbyBrowser extends React.Component {
         this.state = {
             lobby_lookup: {},
             lobbies: [],
-            lobby_join_uuid: null,
         };
     }
 
@@ -31,12 +31,13 @@ export default class LobbyBrowser extends React.Component {
     async onJoin(lobby_uuid) {
         let modified_lobby = this.state.lobby_lookup[lobby_uuid];
         modified_lobby.users.push(this.props.username);
-        await this.database.ref("lobby").off('value', this.all_lobby_callback);
         let lobby_ref = this.database.ref("lobby/" + lobby_uuid);
         await lobby_ref.set(modified_lobby);
-        this.setState({
-            lobby_join_uuid: lobby_uuid,
-        });
+        this.props.history.push("/lobby/" + lobby_uuid);
+    }
+
+    onSpectate(lobby_uuid) {
+        this.props.history.push("/lobby/" + lobby_uuid);
     }
 
     subscribeToLobbyList(){
@@ -63,23 +64,19 @@ export default class LobbyBrowser extends React.Component {
         let lobby_ref = this.database.ref("lobby/" + uuid);
         await lobby_ref.set({
             created_ms: Date.now(),
+            max_players: 2,
             users: [this.props.username],
             game_id: null,
             host: this.props.username,
         });
-        this.setState({
-            lobby_join_uuid: uuid,
-        });
+        this.props.history.push("/lobby/" + uuid);
     }
 
     render() {
-        if (this.state.lobby_join_uuid) {
-            return <Redirect to={"/lobby/"+this.state.lobby_join_uuid}></Redirect>;
-        }
-        let lobbies_components = [];
-        let lobbies = this.state.lobbies.filter(lobby => Date.now() - lobby.val.created_ms < 1*60*60*1000);
-        lobbies.filter((lobby) => lobby.val.game_id ? false : true);
-        lobbies.sort((a, b) => a.created_ms > b.created_ms);
+        let table_rows = [];
+        let lobbies = this.state.lobbies.filter(lobby => (Date.now() - lobby.val.created_ms) < 1*60*60*1000);
+        lobbies = lobbies.filter((lobby) => lobby.val.game_id ? false : true);
+        lobbies.sort((a, b) => a.val.created_ms > b.val.created_ms);
         for (let lobby of lobbies) {
             let users_string = lobby.val.users.join(',');
             let age = 'unknown';
@@ -91,16 +88,51 @@ export default class LobbyBrowser extends React.Component {
                 }
             }
             let selected = lobby.uuid == this.state.current_lobby_uuid;
-            lobbies_components.push(<div className='lobby-row' id={selected ? 'joined-lobby' : ''}><button className="join" onClick={this.onJoin.bind(this, lobby.uuid)}>join <ImEnter/></button>players: {users_string} age: {age}</div>)
+            let can_join = lobby.val.users.indexOf(this.props.username) == -1;
+            can_join = can_join && lobby.val.users.length < lobby.val.max_players;
+            let num_empty = (lobby.val.max_players - lobby.val.users.length) || 0;
+            let empty = [];
+            for (let i = 0; i < num_empty; i++) {
+                empty.push(<BsPerson/>);
+            }
+            table_rows.push(<tr>
+                <td>{lobby.val.host}</td>
+                <td>{age}</td>
+                <td>{lobby.val.users.map((username) => <BsFillPersonFill/>)}{empty}</td>
+                <td>
+                    <button className="join pure-button" disabled={!can_join} onClick={this.onJoin.bind(this, lobby.uuid)}>Enter<ImEnter/></button>
+                    <button className="join pure-button" onClick={this.onSpectate.bind(this, lobby.uuid)}>Spectate<GiBinoculars/></button>
+                </td>
+            </tr>);
+        }
+
+        let table = <table class="pure-table" id="lobby_table">
+            <thead>
+                <tr>
+                    <th>Host</th>
+                    <th className="lobby-age-column">Age</th>
+                    <th className="lobby-max-column">Players</th>
+                    <th className="lobby-buttons-column">    
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {table_rows}
+            </tbody>
+        </table> 
+        if (table_rows.length == 0) {
+            table = <div>No open games... start one by clicking "Create Lobby" above!</div>
         }
         
         return (
             <body>
                 <h1>Lobbies</h1>
-                <div>Welcome {this.props.username}   <button onClick={this.createLobby.bind(this)}>Create Lobby</button></div>
+                <button className="pure-button pure-button-primary" id="create-lobby-button" onClick={this.createLobby.bind(this)}>Create Lobby</button>
+                {table}
                 
-                {lobbies_components}
             </body>
         );
     }
 }
+
+export default withRouter(LobbyBrowser);
