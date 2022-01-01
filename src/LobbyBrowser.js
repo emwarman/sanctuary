@@ -47,6 +47,7 @@ class LobbyBrowser extends React.Component {
             let lobbies = snapshot.val();
             let lobby_list = [];
             for (let lobby_uuid in snapshot.val()) {
+                console.log(lobby_uuid);
                 lobby_list.push({
                     uuid: lobby_uuid,
                     val: lobbies[lobby_uuid],
@@ -61,6 +62,7 @@ class LobbyBrowser extends React.Component {
 
     async createLobby(event) {
         let uuid = uuidv4();
+        console.log(this.database);
         let lobby_ref = this.database.ref("lobby/" + uuid);
         await lobby_ref.set({
             created_ms: Date.now(),
@@ -106,7 +108,7 @@ class LobbyBrowser extends React.Component {
             </tr>);
         }
 
-        let table = <table class="pure-table" id="lobby_table">
+        let table = <table className="pure-table" id="lobby_table">
             <thead>
                 <tr>
                     <th>Host</th>
@@ -125,12 +127,14 @@ class LobbyBrowser extends React.Component {
         }
         
         return (
-            <body>
+            <div>
                 <h1>Lobbies</h1>
-                <button className="pure-button pure-button-primary" id="create-lobby-button" onClick={this.createLobby.bind(this)}>Create Lobby</button>
+                <div id='how-to-play-header'>
+                    <a href="/how_to_play">how to play</a>
+                </div>
                 {table}
-                
-            </body>
+                <button className="pure-button pure-button-primary" id="create-lobby-button" onClick={this.createLobby.bind(this)}>Create Lobby</button>
+            </div>
         );
     }
 }

@@ -198,26 +198,26 @@ class Game extends Component {
     </Modal>;
     return (
       <div>
-        <div class="pure-menu pure-menu-horizontal">
+        <div className="pure-menu pure-menu-horizontal">
             <div className="pure-menu-item" style={{
                 'font-size': '30px',
             }}>Sanctuary</div>
-            <ul class="pure-menu-list">
-                {this.state.game_state == "GAME_OVER" ? <li class="pure-menu-item">
-                    <a href="#" class="pure-menu-link" onClick={() => this.setState({score_screen_modal_open: true})}>Score Screen</a>
+            <ul className="pure-menu-list">
+                {this.state.game_state == "GAME_OVER" ? <li className="pure-menu-item">
+                    <a href="#" className="pure-menu-link" onClick={() => this.setState({score_screen_modal_open: true})}>Score Screen</a>
                 </li> : null}
-                <li class="pure-menu-item">
-                    <a href="#" class="pure-menu-link" onClick={() => this.setState({help_model_enabled: true})}>Help</a>
+                <li className="pure-menu-item">
+                    <a href="#" className="pure-menu-link" onClick={() => this.setState({help_model_enabled: true})}>Help</a>
                 </li>
-                <li class="pure-menu-item">
-                    <a href="/lobby" class="pure-menu-link" onClick={() => alert('not implement')}>{this.state.game_state == "GAME_OVER" ? "Exit": "Resign"}</a>
+                <li className="pure-menu-item">
+                    <a href="/lobby" className="pure-menu-link" onClick={() => alert('not implement')}>{this.state.game_state == "GAME_OVER" ? "Exit": "Resign"}</a>
                 </li>
             </ul>
         </div>
           {modal}
           {help_modal}
-        <div class="pure-g">
-            <div class="pure-u-1-2">
+        <div className="pure-g">
+            <div className="pure-u-1-2">
             <div>Game State: <b className={isActive(this.state.game_state) ? "active" : ""}>{this.state.game_state}</b></div>
             <div>Deck: {this.state.game_model.deck.length} cards</div>
             <button disabled={this.state.game_state != "DRAW"} onClick={this.drawPressed.bind(this)}>
@@ -228,17 +228,17 @@ class Game extends Component {
             </button>
                 {player_sanctuary}
             </div>
-            <div class="pure-u-1-2">
+            <div className="pure-u-1-2">
                 <h3>Opponents:</h3>
                 {sanctuary_components}
             </div>
         </div>
         <div id="bottom-pannel">
-            <div class="pure-g">
-                <div class="pure-u-1-8"> 
+            <div className="pure-g">
+                <div className="pure-u-1-8"> 
                     <Discard game_state={this.state.game_state} cards={curr_player.discard} player={curr_player.username} onDraw={_ => this.onDraw(curr_player.username)}></Discard>
                 </div>
-                <div class="pure-u-7-8"> 
+                <div className="pure-u-7-8"> 
                     <div id="bottom-pannel-left">
                         <h3>Your Hand: ({hand_view?.length || 0})</h3>
                         <div id="hand">{hand_view}</div>

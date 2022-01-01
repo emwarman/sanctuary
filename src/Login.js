@@ -3,6 +3,8 @@ import HelpComponent from './Help';
 
 import firebase from "firebase/app";
 import * as firebaseui from "firebaseui";
+import 'firebaseui/dist/firebaseui.css';
+
 // var firebaseui = require('firebaseui');
 
 const MIN_USERNAME = 5;
@@ -18,11 +20,18 @@ export default class Login extends React.Component {
     }
 
     componentDidMount(){
-        console.log("mounting login");
         this.nameInput.focus();
-        console.log(firebase);
         var ui = new firebaseui.auth.AuthUI(firebase.auth());
         ui.start('#firebaseui-auth-container', {
+            callbacks: {
+                signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+                    console.log(authResult.additionalUserInfo.profile.email);
+                    this.props.onLogin(authResult.additionalUserInfo.profile.email);
+                    return false;
+                }.bind(this),
+                uiShown: function() {
+                }
+            },
             signInOptions: [
                 { 
                     provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -54,17 +63,19 @@ export default class Login extends React.Component {
             is_valid = true;
         }
         return <div className="login">
-            {/* <div id='firebaseui-auth-container'></div> */}
             <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit}>
                 <h2>Login</h2>
                 <label>
-                    Username:
+                    Screen name:
                     <input ref={(input) => { this.nameInput = input; }} type="text" value={this.state.value} onChange={this.handleChange} />
                 </label>
                 {message}
             <button disabled={!is_valid} type="submit" className="pure-button">Enter as Guest</button>
             </form>
-            <HelpComponent/>
+
+            <h3>Sign in:</h3>
+            <div id='firebaseui-auth-container' disabled={!is_valid}></div>
+
         </div>;
     }
 }

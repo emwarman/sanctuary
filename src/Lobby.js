@@ -68,13 +68,13 @@ class Lobby extends React.Component {
         for (let p of this.state.current_lobby.users) {
             players.push(<div><BsFillPersonFill/>{p} {curr_lobby.host == p ? <b>(host)</b>: ""}</div>);
         }
-        return (<body>
+        return (<div>
             <h1>Current Lobby</h1>
             <h2>Players</h2>
             {players}
             {start_button}
             <div>{message}</div>
-        </body>);
+        </div>);
     }
 }
 

@@ -1,14 +1,14 @@
 export const Species = [
-  "maple",
-  "cherryBlossom",
-  "blueSpruce",
-  "jacaranda",
-  "oak",
-  "dogwood",
-  "willow",
-  "tulipPoplar",
-  "cassia",
-  "royalPoinciana"
+  "quartz",
+  "amber",
+  "jade",
+  "pyrite",
+  "obsidian",
+  "cinnabar",
+  "sodalite",
+  "amethyst",
+  "slate",
+  "tiger"
 ];
 
 /**
