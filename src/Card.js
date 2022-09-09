@@ -5,17 +5,17 @@ import './Card.css'
 
 
 const rocksAssets = {
-    // "amber": "/assets/amber.png",
-    // TODO
-    // "quartz": "hotpink",
-    // "jade": "limeGreen",
-    // "pyrite": "gold",
-    // "obsidian": "black",
-    // "cinnabar": "red",
-    // "sodalite": "blue",
-    // "amethyst": "purple",
-    // "slate": "darkgrey",
-    // "tiger": "saddlebrown"
+    "amber": "/assets/amber.png",
+    "quartz": "/assets/quartz.png",
+    "jade": "/assets/jade.png",
+    "pyrite": "/assets/pyrite.png",
+    "obsidian": "/assets/obsidian.png",
+    "cinnabar": "/assets/cinnebar.png",
+    
+    "sodalite": "/assets/sodalite.png",
+    "amethyst": "/assets/amethyst.png",
+    "slate": "/assets/slate.png",
+    "tiger": "/assets/tigers-eye.png",
 }
 
 const rocksDisplay = {

@@ -4,7 +4,7 @@
 }
 
 .card {
-    border: 1px solid #999;
+    border: 1.5px solid #999;
     border-radius: 8px;
     font-size: 24px;
     font-weight: bold;
@@ -53,6 +53,7 @@
 .cardgraphicimg {
     width: 100%;
     overflow: hidden;
+    padding: 3px;
 }
 
 .card-footer {
@@ -62,24 +63,9 @@
     height: 2.5rem;            /* Footer height */
 }
 
-.maple { color: rgba(255, 140, 0, 0.781) }
-.cherryBlossom { color: rgba(255, 105, 180, 0.801) }
-.blueSpruce { color: rgba(47, 79, 79, 0.699) }
-.jacaranda { color: rgba(148, 0, 211, 0.644) }
-.oak { color: rgba(139, 69, 19, 0.753) }
-.dogwood { color: rgba(169, 169, 169, 0.76) }
-.willow { color: rgba(85, 107, 47, 0.671) }
-.tulipPoplar { color: rgba(50, 205, 50, 0.705) }
-.cassia { color: rgba(255, 217, 0, 0.664) }
-.royalPoinciana { color: rgba(255, 0, 0, 0.726) }
-
 /* Rocks. */
 .quartz { color: rgba(244, 41, 210, 0.781) }
 .amber { color: var(--amber) }
-img.amber {
-    -webkit-filter: drop-shadow(5px 5px 5px var(--amber));
-    filter: drop-shadow(0px 15px 10px var(--amber));
-}
 .jade { color: rgba(58, 145, 68, 0.699) }
 .pyrite { color: rgba(255, 229, 83, 0.644) }
 .obsidian { color: rgba(4, 4, 4, 0.753) }

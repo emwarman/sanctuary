@@ -35,7 +35,6 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    console.log("mounting app");
     if (!firebase.apps.length) {
       const firebaseConfig = {
         apiKey: "AIzaSyAmYORTgoOVoyF7zZyFXe_XyzwZhZBM6tk",
